@@ -1,0 +1,25 @@
+
+# kubernetes
+alias k='kubectl'
+alias kwatch='k get --all-namespaces -w events'
+
+
+
+# git
+alias gs='git status'
+alias gb='git branch'
+alias gco='git checkout'
+alias gcm='git commit -m'
+
+# tmux
+alias tmls='tmux ls'
+alias tma='tmux a'
+alias tmat='tmux a -t'
+alias tmns='tmux new-session -A -s'
+
+
+# misc
+alias vim='nvim'
+alias c='code .'
+alias ..='cd ..'
+alias ...='cd ../..'
