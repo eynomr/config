@@ -29,6 +29,9 @@ return {
                 "lua_ls",
                 "rust_analyzer",
                 "gopls",
+                "ruff",
+                "isort",
+                "ruff_lsp"
             },
             handlers = {
                 function(server_name) -- default handler (optional)
