@@ -29,9 +29,7 @@ return {
                 "lua_ls",
                 "rust_analyzer",
                 "gopls",
-                "ruff",
-                "isort",
-                "ruff_lsp"
+                "pyright",
             },
             handlers = {
                 function(server_name) -- default handler (optional)
@@ -70,8 +68,39 @@ return {
                         }
                     }
                 end,
-            }
+
+                ["pyright"] = function ()
+                    local lspconfig = require("lspconfig")
+                    local util = require("lspconfig.util")
+                    local function setup_env(venv_path)
+                        lspconfig.pyright.setup({
+                            capabilities = capabilities,
+                            before_init = function (_,config)
+                                config.settings.python.pythonPath = util.path.join(venv_path, "bin", "python")
+                            end,
+                            settings = {
+                                python = {
+                                    analysis = {
+                                        autoSearchPaths = true,
+                                        useLibraryCodeForTypes = true,
+                                    },
+                                },
+                            },
+                        })
+                    end
+                    vim.api.nvim_create_user_command('Svenv', function (opts)
+                        local venv_path = opts.args
+                        setup_env(venv_path)
+                        print("Switched to use venv: " .. venv_path)
+                    end, { nargs = 1})
+
+                    local default_path = '/usr'
+                    setup_env(default_path)
+                end
+            },
+
         })
+
 
         local cmp_select = { behavior = cmp.SelectBehavior.Select }
 
@@ -91,8 +120,30 @@ return {
                 { name = 'nvim_lsp' },
                 { name = 'luasnip' }, -- For luasnip users.
             }, {
-                { name = 'buffer' },
-            })
+                    { name = 'buffer' },
+                })
+        })
+
+        vim.api.nvim_create_autocmd('LspAttach', {
+            group = vim.api.nvim_create_augroup('eyn-attach', { clear = true }),
+            callback = function (event)
+                local map = function (keys, func, desc, mode)
+                    mode = mode or 'n'
+                    if func then
+                        vim.keymap.set(mode, keys, func, { buffer = event.buf, desc = 'LSP : ' .. desc })
+                    else
+                        vim.notify("Function for keymap '" .. keys .."' is nil", vim.log.levels.WARN)
+                    end
+                end
+                -- <C-t> to jump back
+                local telescope_builtin = require('telescope.builtin')
+                map('gd', telescope_builtin.lsp_definitions, '[G]oto [D]efinition')
+                map('gr', telescope_builtin.lsp_references, '[G]oto [R]eferences')
+                map('gI', telescope_builtin.lsp_implementations, '[G]oto [I]mplementation')
+                map('<leader>D', telescope_builtin.lsp_type_definitions, '[T]ype [D]efinition')
+                map('<leader>rn', vim.lsp.buf.rename, '[R]e[N]ame')
+            end
+
         })
 
         vim.diagnostic.config({

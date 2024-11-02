@@ -1,7 +1,6 @@
 
 source ~/.zsh_aliases
 
-export PATH="$PATH:/opt/nvim-linux64/bin"
 export GOROOT=/usr/local/go
 export GOPATH=$HOME/go
 export PATH=$GOPATH/bin:$GOROOT/bin:$PATH
@@ -23,4 +22,7 @@ plugins=(
 
 source $ZSH/oh-my-zsh.sh
 
-eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+eval "$(/opt/homebrew/bin/brew shellenv)"
+export PATH="/opt/homebrew/opt/node@20/bin:$PATH"
+
+. "$HOME/.cargo/env"

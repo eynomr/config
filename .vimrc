@@ -19,6 +19,7 @@ set foldcolumn=1
 set lbr
 set tw=500
 
+set termguicolors
 
 set ai "Auto indent"
 set si "Smart indent"
