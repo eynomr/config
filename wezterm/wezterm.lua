@@ -9,11 +9,21 @@ config.initial_rows = 28
 config.hide_tab_bar_if_only_one_tab = true
 config.window_background_opacity = 0.9
 config.macos_window_background_blur = 10
+config.automatically_reload_config = true
+config.check_for_updates = false
+config.use_fancy_tab_bar = false
+config.tab_bar_at_bottom = false
 
 config.color_scheme = 'Afterglow'
-config.font = wezterm.font("Ubuntu Mono")
-config.font_size = 14.0
-config.line_height = 1.1
+config.font = wezterm.font("JetBrains Mono", { weight = "Bold" })
+config.font_size = 12.5
+
+config.window_padding = {
+    left = 7,
+    right = 0,
+    top = 2,
+    bottom = 0
+}
 
 config.keys = {
     {
