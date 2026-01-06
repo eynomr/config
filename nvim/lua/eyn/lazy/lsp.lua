@@ -1,161 +1,194 @@
+-- LSP Configuration (nvim 0.11+)
 return {
-    "neovim/nvim-lspconfig",
-    dependencies = {
+    -- Mason: Package manager for LSP servers, formatters, linters
+    {
         "williamboman/mason.nvim",
-        "williamboman/mason-lspconfig.nvim",
-        "hrsh7th/cmp-nvim-lsp",
-        "hrsh7th/cmp-buffer",
-        "hrsh7th/cmp-path",
-        "hrsh7th/cmp-cmdline",
-        "hrsh7th/nvim-cmp",
-        "L3MON4D3/LuaSnip",
-        "saadparwaiz1/cmp_luasnip",
-        "j-hui/fidget.nvim",
+        lazy = false,
+        config = function()
+            require("mason").setup({
+                ui = {
+                    icons = {
+                        package_installed = "✓",
+                        package_pending = "➜",
+                        package_uninstalled = "✗",
+                    },
+                    border = "rounded",
+                },
+            })
+        end,
     },
 
-    config = function()
-        local cmp = require('cmp')
-        local cmp_lsp = require("cmp_nvim_lsp")
-        local capabilities = vim.tbl_deep_extend(
-            "force",
-            {},
-            vim.lsp.protocol.make_client_capabilities(),
-            cmp_lsp.default_capabilities())
+    -- Bridge between mason and lspconfig
+    {
+        "williamboman/mason-lspconfig.nvim",
+        dependencies = { "williamboman/mason.nvim" },
+        config = function()
+            require("mason-lspconfig").setup({
+                ensure_installed = {
+                    "lua_ls",
+                    "ts_ls",
+                    "gopls",
+                    "ruff",
+                    "pyright",
+                    "jsonls",
+                    "yamlls",
+                    "html",
+                    "cssls",
+                    "tailwindcss",
+                    "marksman",
+                },
+                automatic_installation = true,
+            })
+        end,
+    },
 
-        require("fidget").setup({})
-        require("mason").setup()
-        require("mason-lspconfig").setup({
-            ensure_installed = {
-                "lua_ls",
-                "rust_analyzer",
-                "gopls",
-                "pyright",
-            },
-            handlers = {
-                function(server_name) -- default handler (optional)
-                    require("lspconfig")[server_name].setup {
-                        capabilities = capabilities
-                    }
+    -- LSP setup using nvim 0.11 native API
+    {
+        "neovim/nvim-lspconfig",
+        event = { "BufReadPre", "BufNewFile" },
+        dependencies = {
+            "williamboman/mason-lspconfig.nvim",
+            "hrsh7th/cmp-nvim-lsp",
+        },
+        config = function()
+            local capabilities = require("cmp_nvim_lsp").default_capabilities()
+
+            -- LSP keymaps on attach
+            vim.api.nvim_create_autocmd("LspAttach", {
+                group = vim.api.nvim_create_augroup('lsp_attach_disable_ruff_hover', { clear = true }),
+                callback = function(args)
+                    local bufnr = args.buf
+                    local map = function(mode, lhs, rhs, desc)
+                        vim.keymap.set(mode, lhs, rhs, { buffer = bufnr, desc = desc })
+                    end
+                    local client = vim.lsp.get_client_by_id(args.data.client_id)
+                    if client == nil then
+                        return
+                    end
+                    if client.name == 'ruff' then
+                        client.server_capabilities.hoverProvider = false
+                    end
+
+                    map("n", "gd", vim.lsp.buf.definition, "Go to definition")
+                    map("n", "gD", vim.lsp.buf.declaration, "Go to declaration")
+                    map("n", "gi", vim.lsp.buf.implementation, "Go to implementation")
+                    map("n", "gr", vim.lsp.buf.references, "Go to references")
+                    map("n", "K", vim.lsp.buf.hover, "Hover documentation")
+                    map("n", "<C-k>", vim.lsp.buf.signature_help, "Signature help")
+                    map("i", "<C-k>", vim.lsp.buf.signature_help, "Signature help")
+                    map("n", "<leader>rn", vim.lsp.buf.rename, "Rename symbol")
+                    map("n", "<leader>ca", vim.lsp.buf.code_action, "Code action")
+                    map("n", "<leader>cf", function() vim.lsp.buf.format({ async = true }) end, "Format")
+                    map("n", "<F2>", vim.lsp.buf.rename, "Rename symbol")
+                    map("n", "[d", vim.diagnostic.goto_prev, "Previous diagnostic")
+                    map("n", "]d", vim.diagnostic.goto_next, "Next diagnostic")
                 end,
+            })
 
-                zls = function()
-                    local lspconfig = require("lspconfig")
-                    lspconfig.zls.setup({
-                        root_dir = lspconfig.util.root_pattern(".git", "build.zig", "zls.json"),
-                        settings = {
-                            zls = {
-                                enable_inlay_hints = true,
-                                enable_snippets = true,
-                                warn_style = true,
-                            },
+            -- Configure servers using vim.lsp.config (nvim 0.11+)
+            local servers = {
+                lua_ls = {
+                    settings = {
+                        Lua = {
+                            diagnostics = { globals = { "vim", "Snacks" } },
+                            workspace = { checkThirdParty = false },
+                            telemetry = { enable = false },
                         },
-                    })
-                    vim.g.zig_fmt_parse_errors = 0
-                    vim.g.zig_fmt_autosave = 0
-
-                end,
-                ["lua_ls"] = function()
-                    local lspconfig = require("lspconfig")
-                    lspconfig.lua_ls.setup {
-                        capabilities = capabilities,
-                        settings = {
-                            Lua = {
-                                runtime = { version = "Lua 5.1" },
-                                diagnostics = {
-                                    globals = { "bit", "vim", "it", "describe", "before_each", "after_each" },
-                                }
+                    },
+                },
+                pyright = {
+                    settings = {
+                        pyright = {
+                            disableOrganizeImports = true
+                        },
+                        python = {
+                            analysis = {
+                                ignore = { "*" }
                             }
                         }
                     }
-                end,
+                },
+                ruff_lsp = {},
+                jsonls = {},
+                yamlls = {},
+                html = {},
+                cssls = {},
+                tailwindcss = {},
+                marksman = {},
+                gopls = {
+                    settings = {
+                        gopls = {
+                            analyses = { unusedparams = true },
+                            staticcheck = true,
+                            gofumpt = true,
+                        },
+                    },
+                },
+            }
 
-                ["pyright"] = function ()
-                    local lspconfig = require("lspconfig")
-                    local util = require("lspconfig.util")
-                    local function setup_env(venv_path)
-                        lspconfig.pyright.setup({
-                            capabilities = capabilities,
-                            before_init = function (_,config)
-                                config.settings.python.pythonPath = util.path.join(venv_path, "bin", "python")
-                            end,
-                            settings = {
-                                python = {
-                                    analysis = {
-                                        autoSearchPaths = true,
-                                        useLibraryCodeForTypes = true,
-                                    },
-                                },
-                            },
-                        })
-                    end
-                    vim.api.nvim_create_user_command('Svenv', function (opts)
-                        local venv_path = opts.args
-                        setup_env(venv_path)
-                        print("Switched to use venv: " .. venv_path)
-                    end, { nargs = 1})
-
-                    local default_path = '/usr'
-                    setup_env(default_path)
-                end
-            },
-
-        })
-
-
-        local cmp_select = { behavior = cmp.SelectBehavior.Select }
-
-        cmp.setup({
-            snippet = {
-                expand = function(args)
-                    require('luasnip').lsp_expand(args.body) -- For `luasnip` users.
-                end,
-            },
-            mapping = cmp.mapping.preset.insert({
-                ['<C-p>'] = cmp.mapping.select_prev_item(cmp_select),
-                ['<C-n>'] = cmp.mapping.select_next_item(cmp_select),
-                ['<C-y>'] = cmp.mapping.confirm({ select = true }),
-                ["<C-Space>"] = cmp.mapping.complete(),
-            }),
-            sources = cmp.config.sources({
-                { name = 'nvim_lsp' },
-                { name = 'luasnip' }, -- For luasnip users.
-            }, {
-                    { name = 'buffer' },
-                })
-        })
-
-        vim.api.nvim_create_autocmd('LspAttach', {
-            group = vim.api.nvim_create_augroup('eyn-attach', { clear = true }),
-            callback = function (event)
-                local map = function (keys, func, desc, mode)
-                    mode = mode or 'n'
-                    if func then
-                        vim.keymap.set(mode, keys, func, { buffer = event.buf, desc = 'LSP : ' .. desc })
-                    else
-                        vim.notify("Function for keymap '" .. keys .."' is nil", vim.log.levels.WARN)
-                    end
-                end
-                -- <C-t> to jump back
-                local telescope_builtin = require('telescope.builtin')
-                map('gd', telescope_builtin.lsp_definitions, '[G]oto [D]efinition')
-                map('gr', telescope_builtin.lsp_references, '[G]oto [R]eferences')
-                map('gI', telescope_builtin.lsp_implementations, '[G]oto [I]mplementation')
-                map('<leader>D', telescope_builtin.lsp_type_definitions, '[T]ype [D]efinition')
-                map('<leader>rn', vim.lsp.buf.rename, '[R]e[N]ame')
+            for server, config in pairs(servers) do
+                config.capabilities = capabilities
+                vim.lsp.config[server] = config
+                vim.lsp.enable(server)
             end
 
-        })
+            -- Diagnostic signs
+            vim.diagnostic.config({
+                virtual_text = { prefix = "●" },
+                signs = {
+                    text = {
+                        [vim.diagnostic.severity.ERROR] = " ",
+                        [vim.diagnostic.severity.WARN] = " ",
+                        [vim.diagnostic.severity.HINT] = "󰌵 ",
+                        [vim.diagnostic.severity.INFO] = " ",
+                    },
+                },
+                underline = true,
+                update_in_insert = false,
+                severity_sort = true,
+                float = { border = "rounded" },
+            })
+        end,
+    },
 
-        vim.diagnostic.config({
-            -- update_in_insert = true,
-            float = {
-                focusable = false,
-                style = "minimal",
-                border = "rounded",
-                source = "always",
-                header = "",
-                prefix = "",
-            },
-        })
-    end
+    -- none-ls (null-ls successor) - Formatters/Linters as LSP
+    {
+        "nvimtools/none-ls.nvim",
+        event = { "BufReadPre", "BufNewFile" },
+        dependencies = { "nvim-lua/plenary.nvim" },
+        config = function()
+            local null_ls = require("null-ls")
+            null_ls.setup({
+                sources = {
+                    null_ls.builtins.formatting.prettier,
+                    null_ls.builtins.formatting.stylua,
+                    null_ls.builtins.formatting.gofumpt,
+                    null_ls.builtins.formatting.goimports,
+                    null_ls.builtins.formatting.clang_format,
+                },
+            })
+        end,
+    },
+
+    -- Trouble: Pretty diagnostics list
+    {
+        "folke/trouble.nvim",
+        dependencies = { "nvim-tree/nvim-web-devicons" },
+        cmd = "Trouble",
+        keys = {
+            { "<leader>xx", "<cmd>Trouble diagnostics toggle<cr>", desc = "Diagnostics (Trouble)" },
+            { "<leader>xX", "<cmd>Trouble diagnostics toggle filter.buf=0<cr>", desc = "Buffer Diagnostics" },
+            { "<leader>cs", "<cmd>Trouble symbols toggle focus=false<cr>", desc = "Symbols (Trouble)" },
+        },
+        opts = { use_diagnostic_signs = true },
+    },
+
+    -- Fidget: LSP progress indicator
+    {
+        "j-hui/fidget.nvim",
+        event = "LspAttach",
+        opts = {
+            notification = { window = { winblend = 0 } },
+        },
+    },
 }

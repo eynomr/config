@@ -20,6 +20,10 @@ alias tmns='tmux new-session -A -s'
 
 # misc
 alias vim='nvim'
-alias c='code .'
+alias c='cursor .'
 alias ..='cd ..'
 alias ...='cd ../..'
+
+# Wezterm
+alias wtn='wezterm cli set-tab-title'
+alias wcn='wezterm cli kill-pane'

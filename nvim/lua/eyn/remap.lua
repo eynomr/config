@@ -1,25 +1,35 @@
 vim.g.mapleader = " "
-vim.keymap.set("n", "<leader>pv", vim.cmd.Ex)
 
-vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
-vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostic [Q]uickfix list' })
+local map = vim.keymap.set
 
--- to move things around
-vim.keymap.set("v", "J", ":m '>+1<CR>gv=gv")
-vim.keymap.set("v", "K", ":m '<-2<CR>gv=gv")
+-- File Operations
+map("n", "<C-n>", ":enew<CR>", { desc = "New File" }) 
+map("n", "<leader>e", ":Neotree toggle<CR>", { desc = "Toggle file explorer" })
+map("n", "<leader>o", ":Neotree focus<CR>", { desc = "Focus file explorer" })
 
--- navigate current file much better
-vim.keymap.set("n", "<C-d>", "<C-d>zz")
-vim.keymap.set("n", "<C-u>", "<C-u>zz")
+-- Navigation
+map("n", "<leader>pv", vim.cmd.Ex, { desc = "Back to files" })
+map("n", "<C-S-e>", ":Oil<CR>", { desc = "File explorer" })
+map("n", "<C-b>", ":Neotree toggle dir=.<CR>", { desc = "Toggle sidebar" })
+map("n", "<C-d>", "<C-d>zz", { desc = "Page down" })
+map("n", "<C-u>", "<C-u>zz", { desc = "Page up"})
+
+-- Editor
+map("v", "J", ":m '>+1<CR>gv=gv")
+map("v", "K", ":m '<-2<CR>gv=gv")
+map("n", "<C-h>", ":%s/", { desc = "Find and replace" })
+map("n", "<C-/>", "gcc", { desc = "Toggle comment", remap = true })
+map("v", "<C-/>", "gc", { desc = "Toggle comment", remap = true })
+map("n", "<leader>]", "<cmd>vertical resize +5<CR>", { desc = "Widen window"})
+map("n", "<leader>[", "<cmd>vertical resize -5<CR>", { desc = "Narrow window"})
+
 
 -- everything always in the middle
 vim.keymap.set("n", "n", "nzzzv")
 vim.keymap.set("n", "N", "Nzzzv")
 
--- put from clipboard
+-- Yank/Put Ops
 vim.keymap.set("x", "<leader>p", '"_d"+P')
-
--- yank to clipboard
 vim.keymap.set("n", "<leader>y" , "\"+y")
 vim.keymap.set("v", "<leader>y" , "\"+y")
 vim.keymap.set("n", "<leader>Y" , "\"+Y")
@@ -38,3 +48,10 @@ vim.api.nvim_create_autocmd('TextYankPost', {
     vim.highlight.on_yank()
   end,
 })
+
+
+-- Nice things
+vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
+vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostic [Q]uickfix list' })
+
+
