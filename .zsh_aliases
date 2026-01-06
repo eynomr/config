@@ -1,29 +1,25 @@
-
-# kubernetes
-alias k='kubectl'
-alias kwatch='k get --all-namespaces -w events'
-
-
+# System
+alias e="exit"
+alias dow="$HOME/Downloads"
 
 # git
-alias gs='git status'
-alias gb='git branch'
-alias gco='git checkout'
-alias gcm='git commit -m'
+alias gs="git status"
+alias gb="git branch"
+alias gco="git checkout"
+alias gcm="git commit -m"
 
 # tmux
-alias tmls='tmux ls'
-alias tma='tmux a'
-alias tmat='tmux a -t'
-alias tmns='tmux new-session -A -s'
-
+alias tmls="tmux ls"
+alias tma="tmux a"
+alias tmat="tmux a -t"
+alias tmns="tmux new-session -A -s"
 
 # misc
-alias vim='nvim'
-alias c='cursor .'
-alias ..='cd ..'
-alias ...='cd ../..'
+alias vim="nvim"
+alias c="cursor ."
+alias ..="cd .."
+alias ...="cd ../.."
 
 # Wezterm
-alias wtn='wezterm cli set-tab-title'
-alias wcn='wezterm cli kill-pane'
+alias wtn="wezterm cli set-tab-title"
+alias wcn="wezterm cli kill-pane"
