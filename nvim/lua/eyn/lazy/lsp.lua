@@ -36,6 +36,7 @@ return {
                     "cssls",
                     "tailwindcss",
                     "marksman",
+                    "tflint",
                 },
                 automatic_installation = true,
             })

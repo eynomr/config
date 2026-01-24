@@ -36,7 +36,6 @@ vim.keymap.set("n", "<leader>Y" , "\"+Y")
 
 -- delete to void
 vim.keymap.set("n", "<leader>d", "\"_d")
-vim.keymap.set("v", "<leader>d", "\"_d")
 
 -- this is next level
 vim.keymap.set("n", "<leader>s", [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]])
@@ -54,4 +53,5 @@ vim.api.nvim_create_autocmd('TextYankPost', {
 vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
 vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostic [Q]uickfix list' })
 
-
+-- Terminal
+vim.keymap.set('t', '<Esc>', '<C-\\><C-n>', { silent = true })
