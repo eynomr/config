@@ -1,10 +1,28 @@
 -- UI plugins - theme, bufferline, etc.
 return {
+    {
+        "rose-pine/neovim",
+        name = "rose-pine",
+        lazy = true,
+        config = function()
+            require("rose-pine").setup({
+                dim_inactive_windows = false,
+                extend_background_behind_borders = true,
+                styles = {
+                    italic = false,
+                },
+            })
+            -- vim.cmd("colorscheme rose-pine")
+            -- vim.cmd("colorscheme rose-pine-main")
+            -- vim.cmd("colorscheme rose-pine-moon")
+            -- vim.cmd("colorscheme rose-pine-dawn")
+        end
+    },
     -- Gruvbox theme (transparent)
     {
         "ellisonleao/gruvbox.nvim",
         priority = 1000,
-        lazy = false,
+        lazy = true,
         config = function()
             require("gruvbox").setup({
                 terminal_colors = true,
@@ -62,7 +80,7 @@ return {
                 dim_inactive = false,
                 transparent_mode = true,
             })
-            vim.cmd.colorscheme("gruvbox")
+            -- vim.cmd.colorscheme("gruvbox")
         end,
     },
 

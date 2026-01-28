@@ -55,3 +55,19 @@ vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagn
 
 -- Terminal
 vim.keymap.set('t', '<Esc>', '<C-\\><C-n>', { silent = true })
+
+-- Themes
+local themes = {
+    "rose-pine",
+    "rose-pine-moon",
+    "rose-pine-dawn",
+    "gruvbox"
+}
+
+local current = 1
+
+vim.keymap.set("n", "<leader>tt", function ()
+    current = current % #themes + 1
+    vim.cmd.colorscheme(themes[current])
+    print("Theme -> " .. themes[current])
+end, { desc = "toggle theme"} )
