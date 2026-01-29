@@ -3,7 +3,7 @@ vim.g.mapleader = " "
 local map = vim.keymap.set
 
 -- File Operations
-map("n", "<C-n>", ":enew<CR>", { desc = "New File" }) 
+map("n", "<C-n>", ":enew<CR>", { desc = "New File" })
 map("n", "<leader>e", ":Neotree toggle<CR>", { desc = "Toggle file explorer" })
 map("n", "<leader>o", ":Neotree focus<CR>", { desc = "Focus file explorer" })
 

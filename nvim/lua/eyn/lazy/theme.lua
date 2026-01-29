@@ -3,7 +3,8 @@ return {
     {
         "rose-pine/neovim",
         name = "rose-pine",
-        lazy = true,
+        lazy = false,
+        priority = 1000,
         config = function()
             require("rose-pine").setup({
                 dim_inactive_windows = false,
@@ -12,10 +13,7 @@ return {
                     italic = false,
                 },
             })
-            -- vim.cmd("colorscheme rose-pine")
-            -- vim.cmd("colorscheme rose-pine-main")
-            -- vim.cmd("colorscheme rose-pine-moon")
-            -- vim.cmd("colorscheme rose-pine-dawn")
+            vim.cmd("colorscheme rose-pine")
         end
     },
     -- Gruvbox theme (transparent)
