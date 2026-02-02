@@ -22,7 +22,11 @@ map("n", "<C-/>", "gcc", { desc = "Toggle comment", remap = true })
 map("v", "<C-/>", "gc", { desc = "Toggle comment", remap = true })
 map("n", "<leader>]", "<cmd>vertical resize +5<CR>", { desc = "Widen window"})
 map("n", "<leader>[", "<cmd>vertical resize -5<CR>", { desc = "Narrow window"})
+map("n", "<leader>-", "<cmd>Oil<CR>", { desc = "Oil explorer"} )
 
+-- Terminal
+map("n", "<leader>th", ":botright split | terminal<CR>", { desc = "Terminal horizontal" })
+map("n", "<leader>tv", ":botright vsplit | terminal<CR>", { desc = "Terminal vertical" })
 
 -- everything always in the middle
 vim.keymap.set("n", "n", "nzzzv")

@@ -46,4 +46,20 @@ return {
         event = "VeryLazy",
         config = true,
     },
+
+    {
+        "stevearc/oil.nvim",
+        dependencies = { "nvim-tree/nvim-web-devicons" },
+        config = function()
+            require("oil").setup({
+                view_options = { show_hidden = true },
+                skip_confirm_for_simple_edits = true,
+                default_file_explorer = true,
+                keymaps = {
+                    ["<C-h>"] = false, -- Don't override window nav
+                    ["<C-l>"] = false,
+                },
+            })
+        end,
+    },
 }

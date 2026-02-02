@@ -14,6 +14,22 @@ vim.opt.hlsearch = false
 vim.opt.incsearch = true
 
 vim.opt.termguicolors = true
+vim.opt.lazyredraw = false
+vim.opt.ttyfast = true
+vim.api.nvim_create_autocmd("VimResized", {
+    callback = function ()
+        vim.cmd("wincmd = ")
+        vim.cmd("redraw!")
+    end
+})
+vim.api.nvim_create_autocmd("TermOpen", {
+    callback = function ()
+        vim.opt_local.number = false
+        vim.opt_local.relativenumber = false
+        vim.opt_local.signcolumn = "no"
+        vim.opt_local_scrolloff = 0
+    end
+})
 
 vim.opt.scrolloff = 8
 vim.opt.signcolumn = "yes"

@@ -94,9 +94,6 @@ wezterm.on(
     elseif hover then
         bg = palette.overlay
         fg = palette.text
-    elseif tab.is_last_active then
-        bg = palette.base
-        fg = palette.subtle
    end
 
    local edge_bg = palette.base
