@@ -36,6 +36,7 @@ return {
                     "tailwindcss",
                     "marksman",
                     "tflint",
+                    "terraform-ls"
                 },
                 automatic_installation = true,
             })
