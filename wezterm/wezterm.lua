@@ -8,7 +8,7 @@ config.initial_cols = 120
 config.initial_rows = 28
 config.hide_tab_bar_if_only_one_tab = true
 -- config.window_background_opacity = 0.9
-config.macos_window_background_blur = 10
+config.macos_window_background_blur = 20
 config.automatically_reload_config = true
 config.check_for_updates = false
 config.use_fancy_tab_bar = false
@@ -26,13 +26,13 @@ local palette = {
   iris = "#c4a7e7",
 }
 config.font = wezterm.font("JetBrains Mono", { weight = "Bold" })
-config.font_size = 12.5
+config.font_size = 11
 
 config.window_padding = {
-    left = 7,
-    right = 7,
-    top = 7,
-    bottom = 7
+    left = 12,
+    right = 12,
+    top = 12,
+    bottom = 12
 }
 
 config.window_frame = {
