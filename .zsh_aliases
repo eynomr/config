@@ -19,6 +19,7 @@ alias vim="nvim"
 alias c="cursor ."
 alias ..="cd .."
 alias ...="cd ../.."
+alias vault="cd ~/Library/Mobile\ Documents/iCloud~md~obsidian/Documents/eynspace"
 
 # Wezterm
 alias wtn="wezterm cli set-tab-title"
