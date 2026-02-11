@@ -7,6 +7,7 @@ alias gs="git status"
 alias gb="git branch"
 alias gco="git checkout"
 alias gcm="git commit -m"
+alias gpu="git push -u origin HEAD"
 
 # tmux
 alias tmls="tmux ls"
